@@ -4,8 +4,14 @@ use warnings;
 use ExtUtils::MakeMaker;
 use PDL::Core::Dev;
 
+my $brew_prefix = '';
+if ($^O eq 'darwin') {
+    chomp($brew_prefix = `brew --prefix 2>/dev/null` || '');
+}
+my @inc_dirs = ('/usr/include', '/usr/local/include');
+push @inc_dirs, "$brew_prefix/include" if $brew_prefix;
 my $duck_inc;
-for my $dir ('/usr/include', '/usr/local/include', '/opt/homebrew/include') {
+for my $dir (@inc_dirs) {
     if (-f "$dir/duckdb.h") {
         $duck_inc = $dir;
         last;
@@ -14,7 +20,7 @@ for my $dir ('/usr/include', '/usr/local/include', '/opt/homebrew/include') {
 if (!$duck_inc) {
     die "libduckdb-dev (duckdb.h) is required to build PDL::IO::DuckDB.\n";
 }
-my $lib_flag = $duck_inc =~ m{^/opt/homebrew} ? '-L/opt/homebrew/lib ' : '';
+my $lib_flag = ($brew_prefix && $duck_inc && $duck_inc =~ m{^\$brew_prefix}) ? "-L$brew_prefix/lib " : '';
 
 my $pdl_inc = PDL::Core::Dev::PDL_INCLUDE();
 
