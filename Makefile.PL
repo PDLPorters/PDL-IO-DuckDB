@@ -4,9 +4,17 @@ use warnings;
 use ExtUtils::MakeMaker;
 use PDL::Core::Dev;
 
-if (!-f '/usr/include/duckdb.h' && !-f '/usr/local/include/duckdb.h') {
+my $duck_inc;
+for my $dir ('/usr/include', '/usr/local/include', '/opt/homebrew/include') {
+    if (-f "$dir/duckdb.h") {
+        $duck_inc = $dir;
+        last;
+    }
+}
+if (!$duck_inc) {
     die "libduckdb-dev (duckdb.h) is required to build PDL::IO::DuckDB.\n";
 }
+my $lib_flag = $duck_inc =~ m{^/opt/homebrew} ? '-L/opt/homebrew/lib ' : '';
 
 my $pdl_inc = PDL::Core::Dev::PDL_INCLUDE();
 
@@ -27,9 +35,9 @@ WriteMakefile(
     PREREQ_PM => {
         'PDL' => '2.080',
     },
-    INC     => '-I. ' . $pdl_inc,
+    INC     => '-I. ' . $pdl_inc . ' -I' . $duck_inc,
     XSMULTI => 1,
-    LIBS    => ['-lduckdb'],
+    LIBS    => [ $lib_flag . '-lduckdb' ],
     clean   => { FILES => 'PDL-IO-DuckDB-* *.o DuckDB.bs DuckDB.c' },
     META_MERGE => {
         'meta-spec' => { version => 2 },
