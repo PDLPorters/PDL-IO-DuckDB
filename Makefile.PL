@@ -5,12 +5,10 @@ use ExtUtils::MakeMaker;
 use PDL::Core::Dev;
 
 if (!-f '/usr/include/duckdb.h' && !-f '/usr/local/include/duckdb.h') {
-    warn "libduckdb-dev (duckdb.h) is required to build PDL::IO::DuckDB.\n";
-    exit 0;
+    die "libduckdb-dev (duckdb.h) is required to build PDL::IO::DuckDB.\n";
 }
 
 my $pdl_inc = PDL::Core::Dev::PDL_INCLUDE();
-$pdl_inc =~ s/^"|"$//g;
 
 WriteMakefile(
     NAME               => 'PDL::IO::DuckDB',
@@ -29,20 +27,20 @@ WriteMakefile(
     PREREQ_PM => {
         'PDL' => '2.080',
     },
-    INC   => "-I. $pdl_inc",
+    INC     => '-I. ' . $pdl_inc,
     XSMULTI => 1,
-    LIBS  => ['-lduckdb'],
-    clean => { FILES => 'PDL-IO-DuckDB-* *.o DuckDB.bs DuckDB.c' },
+    LIBS    => ['-lduckdb'],
+    clean   => { FILES => 'PDL-IO-DuckDB-* *.o DuckDB.bs DuckDB.c' },
     META_MERGE => {
         'meta-spec' => { version => 2 },
         resources   => {
             repository => {
                 type => 'git',
-                url  => 'https://github.com/GoogleCloudPlatform/google-auth-library-perl.git',
-                web  => 'https://github.com/GoogleCloudPlatform/google-auth-library-perl',
+                url  => 'https://github.com/PDLPorters/PDL-IO-DuckDB.git',
+                web  => 'https://github.com/PDLPorters/PDL-IO-DuckDB',
             },
             bugtracker => {
-                web => 'https://github.com/GoogleCloudPlatform/google-auth-library-perl/issues',
+                web => 'https://github.com/PDLPorters/PDL-IO-DuckDB/issues',
             },
         },
     },
