@@ -7,3 +7,14 @@
 ^DuckDB\.bs$
 \.o$
 ^PDL-IO-DuckDB-
+^\.git/
+^\.github/
+^\.gitignore$
+^dot-git/
+^_alien/
+\.bs$
+\.xsc$
+^lib/.*\.c$
+\.tar\.gz$
+~$
+\.bak$

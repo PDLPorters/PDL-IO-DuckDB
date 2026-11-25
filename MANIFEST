@@ -1,8 +1,10 @@
 Changes
-lib/PDL/IO/DuckDB.xs
-lib/PDL/IO/DuckDB.pm
-Makefile.PL
+LICENSE
 MANIFEST
 MANIFEST.SKIP
+Makefile.PL
 README.md
+examples/quickstart.pl
+lib/PDL/IO/DuckDB.pm
+lib/PDL/IO/DuckDB.xs
 t/00-load.t
